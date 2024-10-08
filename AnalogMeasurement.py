@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 from saleae.range_measurements import AnalogMeasurer
 
@@ -11,12 +11,12 @@ def freq_from_autocorr(sig, fs):
     sig -= np.mean(sig)
     
     # Calculate autocorrelation and throw away the negative lags
-    corr = numpy.correlate(sig, sig, mode='full')
+    corr = np.correlate(sig, sig, mode='full')
     corr = corr[len(corr)//2:]
 
     # Find the first low point
-    d = numpy.diff(corr)
-    non_zero = numpy.nonzero(d > 0)
+    d = np.diff(corr)
+    non_zero = np.nonzero(d > 0)
     if len(non_zero) == 0 or len(non_zero[0]) == 0:
         return 0
     start = non_zero[0][0]
@@ -25,7 +25,7 @@ def freq_from_autocorr(sig, fs):
     # not reliable for long signals, due to the desired peak occurring between
     # samples, and other peaks appearing higher.
     # Should use a weighting function to de-emphasize the peaks at longer lags.
-    peak = numpy.argmax(corr[start:]) + start
+    peak = np.argmax(corr[start:]) + start
 
     return fs / peak
 
@@ -53,7 +53,7 @@ class MyAnalogMeasurer(AnalogMeasurer):
         if self.all_samples is None:
             self.all_samples = data.samples
             return
-        self.all_samples = numpy.concatenate((self.all_samples, data.samples))
+        self.all_samples = np.concatenate((self.all_samples, data.samples))
 
     # This method is called after all the relevant data has been passed to `process_data`
     # It returns a dictionary of the request_measurements values
