@@ -8,7 +8,7 @@ def freq_from_autocorr(sig, fs):
     Estimate frequency using autocorrelation
     """
     # Remove DC component
-    sig -= np.mean(sig)
+    sig -= numpy.mean(sig)
     
     # Calculate autocorrelation and throw away the negative lags
     corr = numpy.correlate(sig, sig, mode='full')
